@@ -1,0 +1,29 @@
+# Use an official Ubuntu as a base image
+FROM ubuntu:latest
+
+# Install dependencies
+RUN apt-get update -y && \
+    apt-get install -y git
+
+# Install Node.js and npm
+RUN apt-get install -y curl && \
+    curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs
+
+# Check versions
+RUN git --version | grep "git version 2\.[1-9][3-9]" && \
+    node -v | grep "v16\.[0-9]\{1,\}" && \
+    npm -v | grep "6\.[0-9]\{1,\}"
+
+# Set working directory
+WORKDIR /app
+
+# Copy application files
+COPY . .
+
+# Install npm dependencies
+RUN npm install
+
+# Specify the command to run on container start
+CMD ["npm", "start"]
+
